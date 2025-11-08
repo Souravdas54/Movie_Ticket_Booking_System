@@ -6,7 +6,8 @@ import { connectDb } from './app/config/dbConnect';
 import { createDefaultRoles } from './app/middleware/role.middleware';
 
 import {router} from './app/router/user.routes';
-import {movieRouter} from './app/router/movie.routes'
+import {movieRouter} from './app/router/movie.routes';
+import { theaterRouter } from './app/router/theater.routes';
 
 const app = express();
 const PORT = process.env.PORT || 8500;
@@ -18,6 +19,7 @@ app.use(createDefaultRoles);
 
 app.use(router)
 app.use(movieRouter)
+app.use(theaterRouter)
 
 
 connectDb.then(() => {

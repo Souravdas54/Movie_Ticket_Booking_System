@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 
 export interface TheaterInterface {
-    name: string;
+    theatername: string;
     location: string;
     screens: number;
     movies: {
