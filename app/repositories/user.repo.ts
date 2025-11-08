@@ -63,16 +63,17 @@ class UserRepositories {
 
             // Update profile picture
             if (newProfilePicture) {
+                const oldPic = user.profilePicture;
                 // Delete old image 
-                if (user.profilePicture && fs.existsSync(user.profilePicture)) {
-                    fs.unlinkSync(user.profilePicture);
+                if (oldPic && fs.existsSync(oldPic)) {
+                    fs.unlinkSync(oldPic);
                 }
                 user.profilePicture = newProfilePicture;
             }
 
             const updatedUser = await user.save();
             return updatedUser;
-            
+
         } catch (error) {
             console.log(error);
             throw error;

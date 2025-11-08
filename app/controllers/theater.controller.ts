@@ -63,7 +63,7 @@ class TheaterController {
                 data: theater,
             });
         } catch (error) {
-            console.error("❌ Error fetching theater by ID:", error);
+            console.error("Error fetching theater by ID:", error);
             return res.status(500).json({
                 message: "Internal Server Error",
                 error: error instanceof Error ? error.message : error,

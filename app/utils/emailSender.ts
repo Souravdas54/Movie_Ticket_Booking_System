@@ -192,7 +192,7 @@ class EmailService {
       <body>
         <div class="container">
           <div class="header">
-            <h1>🎉 Welcome Aboard!</h1>
+            <h1>Welcome</h1>
             <p>Your email has been successfully verified</p>
           </div>
           <div class="content">

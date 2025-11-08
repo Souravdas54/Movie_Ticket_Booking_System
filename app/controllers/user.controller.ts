@@ -5,7 +5,6 @@ import { LoginSchemaValidate } from '../models/user.Model';
 import _ from 'lodash'
 import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken";
-import nodemailer from 'nodemailer'
 import emailService from '../utils/emailSender'
 import { roleModel } from '../models/role.model';
 
@@ -56,7 +55,7 @@ class UserController {
       );
 
       if (!emailResult.success) {
-        console.log('❌ Failed to send verification email:', emailResult.error);
+        console.log('Failed to send verification email:', emailResult.error);
         console.log('⚠️ Account created but email sending failed');
       } else {
         console.log('✅ Verification email sent successfully');
@@ -129,22 +128,22 @@ class UserController {
 
       // role name from role collection
 
-       let roleName: string;
-    
-    if (typeof userData.role === 'string') {
-      // If role is already stored as string (role name)
-      roleName = userData.role;
-    } else {
-      // If role is stored as ObjectId, fetch the role name
-      const roleDoc = await roleModel.findById(userData.role);
-      if (!roleDoc) {
-        return res.status(500).json({
-          success: false,
-          message: "Role not found"
-        });
+      let roleName: string;
+
+      if (typeof userData.role === 'string') {
+        // If role is already stored as string (role name)
+        roleName = userData.role;
+      } else {
+        // If role is stored as ObjectId, fetch the role name
+        const roleDoc = await roleModel.findById(userData.role);
+        if (!roleDoc) {
+          return res.status(500).json({
+            success: false,
+            message: "Role not found"
+          });
+        }
+        roleName = roleDoc.name;
       }
-      roleName = roleDoc.name;
-    }
 
       const payload = {
         name: userData.name,
@@ -160,6 +159,17 @@ class UserController {
       const secretKey = process.env.JWT_SECRET as string;
       const token = jwt.sign(payload, secretKey, { expiresIn: "1d" });
 
+       const emailResult = await emailService.sendWelcomeEmail(
+        userData.email,
+        userData.name
+      );
+
+      if (!emailResult.success) {
+        console.log('Failed to send welcome email:', emailResult.error);
+        console.log('⚠️ Account login but email sending failed');
+      } else {
+        console.log('✅ Welcome email sent successfully');
+      }
 
       return res.status(200).send({
         message: "Login successful",
@@ -242,8 +252,9 @@ class UserController {
 
       let newProfilePicture: string | undefined;
       if (req.file) {
-        const file = req.file as any;
-        newProfilePicture = file.path || file.location || file.url || file.secure_url;
+        console.log("Uploaded File Info:", req.file);
+
+        newProfilePicture = req.file.path
       }
 
       const updatedUser = await userRepositories.update_user(
@@ -278,7 +289,7 @@ class UserController {
       });
 
     } catch (error: any) {
-      console.error('❌ Update profile error:', error);
+      console.error('Update profile error:', error);
       return res.status(500).json({
         success: false,
         message: "Internal Server Error"

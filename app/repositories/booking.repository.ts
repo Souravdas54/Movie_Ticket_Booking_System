@@ -9,6 +9,7 @@ class BookingRepository {
         try {
             const booking = new bookingModel(data);
             return await booking.save();
+            
         } catch (error) {
             console.log(error);
         }
