@@ -28,7 +28,7 @@ const userSchema: Schema = new Schema({
   profilePicture: { type: String },
   isVerified: { type: Boolean, default: false },
   verificationToken: { type: String },
-  role: { type: Schema.Types.ObjectId, ref: 'Role', required: true }
+  role: { type: Schema.Types.ObjectId, ref: 'Role', required: true ,}
 }, {
   timestamps: true
 });
